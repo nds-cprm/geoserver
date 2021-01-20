@@ -3,6 +3,6 @@
 echo "------ HOOK START - BUILD -------"
 printenv
 
-docker build --build-arg --build-arg GS_VERSION=$GS_VERSION -t $IMAGE_NAME .
+docker build --build-arg GS_VERSION=$GS_VERSION -t $IMAGE_NAME .
 
 echo "------ HOOK END - BUILD -------"
