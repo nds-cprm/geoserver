@@ -1,5 +1,7 @@
 # https://docs.geoserver.org/stable/en/user/production/java.html
 # Tomcat 9 & OpenJDK 11 -> Geoserver 2.15 acima
+# Suporte a fontes: https://wiki.debian.org/Fonts
+
 # TODO: Verificar GDAL e JDBC nas versões 2.15 e 2.16 do GeoServer
 ARG IMAGE_TOMCAT_VERSION="9-jre11-slim"
 FROM tomcat:${IMAGE_TOMCAT_VERSION}
@@ -10,6 +12,9 @@ ARG GS_BASE_URL="https://downloads.sourceforge.net/project/geoserver/GeoServer"
 # ENV PROXY_BASE_URL=http://localhost/
 ENV GEOSERVER_VERSION=${GS_VERSION}
 ENV GEOSERVER_BASE_URL=${GS_BASE_URL}
+
+# TODO: Passar o diretório de plugins para o layer final do Dockerfile
+# Pre-carregar os plugins na imagem e habilitar após o entrypoint
 ENV GEOSERVER_PLUGINS_ENABLED=""
 
 COPY docker-entrypoint.sh /usr/local/bin
@@ -25,6 +30,7 @@ RUN set -xe && \
     apt-get -y update && \
     apt-get -y install --no-install-recommends zip unzip curl gdal-bin libgdal-java && \
     # Set GDAL_DATA
+    # TODO: Compilar GDAL 2.2 a partir do fonte - ver no OSGEO.
     export GDAL_DATA=$(dirname $(find /usr/share/ -name epsg.wkt -print -quit)) && \
     echo "export GDAL_DATA=$GDAL_DATA" >> ~/.bashrc && \
     # tornar o arquivo docker-entrypoint.sh executável
